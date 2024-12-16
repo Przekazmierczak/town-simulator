@@ -2,12 +2,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "mieszkaniec.h"
-#include "miasteczko.h"
-#include "symulacja.h"
-#include "zapisz_wczytaj.h"
+#include "resident.h"
+#include "town.h"
+#include "simulation.h"
+#include "save_load.h"
 
-void menu(struct Miasteczko *miasteczko) {
+void menu(struct Town *town) {
     for (;;) {
         // Wyczyść ekran
         #ifdef _WIN32
@@ -25,8 +25,8 @@ void menu(struct Miasteczko *miasteczko) {
         printf("6. Wczytaj\n");
         printf("7. Zakończ program\n");
 
-        int opcja;  // Zmienna do przechowania wybranej opcji
-        int input = scanf("%i", &opcja);  // Odczytaj wejście użytkownika (opcję)
+        int option;  // Zmienna do przechowania wybranej opcji
+        int input = scanf("%i", &option);  // Odczytaj wejście użytkownika (opcję)
 
         // Jeśli podana wartość nie jest poprawna, czyści bufor wejściowy
         if (input != 1) {
@@ -36,24 +36,24 @@ void menu(struct Miasteczko *miasteczko) {
             getchar();  // Usuń enter z bufforu
         }
 
-        switch (opcja) {
+        switch (option) {
             case 1:
-                symulacja(miasteczko);
+                simulation(town);
                 break;
             case 2:
-                informacje_o_miasteczku(miasteczko);
+                town_informations(town);
                 break;
             case 3:
-                informacje_o_mieszkańcach(miasteczko);
+                residents_informations(town);
                 break;
             case 4:
-                lista_osób_na_cmenatrzu(miasteczko->cmentarz);
+                list_of_deceased(town->graveyard);
                 break;
             case 5:
-                zapisz_do_pliku(miasteczko);
+                save_to_file(town);
                 break;
             case 6:
-                wczytaj_z_pliku(miasteczko);
+                load_from_file(town);
                 break;
             case 7:
                 return;

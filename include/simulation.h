@@ -1,0 +1,1 @@
+void simulation(struct Town *town);

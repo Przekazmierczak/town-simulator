@@ -1,11 +1,11 @@
 # Wykryj OS i ustaw odpowiednio komendy
 ifeq ($(OS),Windows_NT)
-	OUTPUT_CMD = symulacja.exe
+	OUTPUT_CMD = simulation.exe
 	CREATE_DIR = @if not exist $(OBJDIR) mkdir $(OBJDIR)
 	CLEAN_CMD = del /q $(OBJDIR)\* $(OUTPUT) *.ilk *.pdb
 	REMOVE_DIR = @if exist $(OBJDIR) rmdir /S /Q $(OBJDIR)
 else
-	OUTPUT_CMD = symulacja
+	OUTPUT_CMD = simulation
 	CREATE_DIR = mkdir -p $(OBJDIR)
 	CLEAN_CMD = rm -rf $(OBJDIR) $(OUTPUT) *.ilk *.pdb
 	REMOVE_DIR = rm -rf $(OBJDIR)
@@ -24,15 +24,14 @@ OBJDIR = build
 # Flags
 CFLAGS = -g -Wall -I$(INCLUDEDIR)
 
-
 # Nazwa pliku binarnego
 OUTPUT = $(OUTPUT_CMD)
 
 # Lista plików źródłowych
-SOURCES = $(SRCDIR)/main.c $(SRCDIR)/budynki.c $(SRCDIR)/cmentarz.c $(SRCDIR)/menu.c $(SRCDIR)/miasteczko.c $(SRCDIR)/mieszkaniec.c $(SRCDIR)/smierc.c $(SRCDIR)/symulacja.c $(SRCDIR)/zapisz_wczytaj.c
+SOURCES = $(SRCDIR)/main.c $(SRCDIR)/buildings.c $(SRCDIR)/graveyard.c $(SRCDIR)/menu.c $(SRCDIR)/town.c $(SRCDIR)/resident.c $(SRCDIR)/death.c $(SRCDIR)/simulation.c $(SRCDIR)/save_load.c
 
 # Lista plików obiektowych
-OBJECTS = $(OBJDIR)/main.o $(OBJDIR)/budynki.o $(OBJDIR)/cmentarz.o $(OBJDIR)/menu.o $(OBJDIR)/miasteczko.o $(OBJDIR)/mieszkaniec.o $(OBJDIR)/smierc.o $(OBJDIR)/symulacja.o $(OBJDIR)/zapisz_wczytaj.o
+OBJECTS = $(OBJDIR)/main.o $(OBJDIR)/buildings.o $(OBJDIR)/graveyard.o $(OBJDIR)/menu.o $(OBJDIR)/town.o $(OBJDIR)/resident.o $(OBJDIR)/death.o $(OBJDIR)/simulation.o $(OBJDIR)/save_load.o
 
 # Podstawowe zasady
 all: $(OUTPUT)

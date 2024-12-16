@@ -1,1 +1,1 @@
-void menu(struct Miasteczko *miasteczko);
+void menu(struct Town *town);

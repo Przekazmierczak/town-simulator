@@ -4,20 +4,20 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
-#include "mieszkaniec.h"
-#include "miasteczko.h"
-#include "cmentarz.h"
-#include "smierc.h"
-#include "budynki.h"
-#include "symulacja.h"
+#include "resident.h"
+#include "town.h"
+#include "graveyard.h"
+#include "death.h"
+#include "buildings.h"
+#include "simulation.h"
 #include "menu.h"
 
 int main() {
     setlocale(LC_ALL, "pl_PL.UTF-8");
     srand(time(NULL));
 
-    int liczba_mieszkańców;
-    int budżet;
+    int number_of_residents;
+    int budget;
     
     // Wyczyść ekran
     #ifdef _WIN32
@@ -30,10 +30,10 @@ int main() {
 
     // Poberz liczbę mieszkańców od użytkownika
     printf("Podaj początkową liczbę mieszkańców: ");
-    int input_mieszkańcy = 0;
-    while (input_mieszkańcy != 1) {
-        input_mieszkańcy = scanf("%i", &liczba_mieszkańców);  // Odczytaj liczbę mieszkańców
-        if (input_mieszkańcy != 1) {
+    int input_number_residents = 0;
+    while (input_number_residents != 1) {
+        input_number_residents = scanf("%i", &number_of_residents);  // Odczytaj liczbę mieszkańców
+        if (input_number_residents != 1) {
             printf("Podaj początkową liczbę mieszkańców (w formacie liczbowym): ");
             int c;
             // Oczyść bufor wejściowy, aby uniknąć zapętlenia
@@ -43,10 +43,10 @@ int main() {
 
     // Pobierz początkowy budżet
     printf("Podaj budżet początkowy: ");
-    int input_budżet = 0;
-    while (input_budżet != 1) {
-        input_budżet = scanf("%i", &budżet);  // Odczytaj budżet
-        if (input_budżet != 1) {
+    int input_budget = 0;
+    while (input_budget != 1) {
+        input_budget = scanf("%i", &budget);  // Odczytaj budżet
+        if (input_budget != 1) {
             printf("Podaj budżet początkowy (w formacie liczbowym): ");
             int c;
             // Oczyść bufor wejściowy, aby uniknąć zapętlenia
@@ -55,10 +55,10 @@ int main() {
     }
     
     // Stwórz strukturę Miasteczko z danymi użytkownika
-    struct Miasteczko *miasteczko = stwórz_miasteczko(liczba_mieszkańców, budżet);
+    struct Town *town = create_town(number_of_residents, budget);
 
     // Wywołaj funkcję menu, aby pozwolić użytkownikowi na interakcję z symulacją
-    menu(miasteczko);
+    menu(town);
 
     return EXIT_SUCCESS;  // Zakończ program
 }
