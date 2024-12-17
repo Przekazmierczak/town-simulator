@@ -9,31 +9,31 @@
 
 void menu(struct Town *town) {
     for (;;) {
-        // Wyczyść ekran
+        // Clear the screen
         #ifdef _WIN32
             system("cls");  // Windows
         #else
             system("clear");  // Linux/macOS
         #endif
         printf("MENU\n");
-        printf("Wybierz opcję:\n");
-        printf("1. Kontynuuj symulacje\n");
-        printf("2. Zobacz podstawowe informacje o miasteczku\n");
-        printf("3. Zobacz listę mieszkańców\n");
-        printf("4. Zobacz cmentarz\n");
-        printf("5. Zapisz\n");
-        printf("6. Wczytaj\n");
-        printf("7. Zakończ program\n");
+        printf("Choose an option:\n");
+        printf("1. Continue simulation\n");
+        printf("2. View basic town information\n");
+        printf("3. View the list of residents\n");
+        printf("4. View the graveyard\n");
+        printf("5. Save\n");
+        printf("6. Load\n");
+        printf("7. Exit program\n");
 
-        int option;  // Zmienna do przechowania wybranej opcji
-        int input = scanf("%i", &option);  // Odczytaj wejście użytkownika (opcję)
+        int option;  // Variable to store the selected option
+        int input = scanf("%i", &option);  // Read the user's input (option)
 
-        // Jeśli podana wartość nie jest poprawna, czyści bufor wejściowy
+        // If the entered value is invalid, clear the input buffer
         if (input != 1) {
             int c;
-            while ((c = getchar()) != '\n' && c != EOF);  // Oczyść bufor wejścia
+            while ((c = getchar()) != '\n' && c != EOF);  // Clear the input buffer
         } else {
-            getchar();  // Usuń enter z bufforu
+            getchar();  // Remove the newline character from the buffer
         }
 
         switch (option) {

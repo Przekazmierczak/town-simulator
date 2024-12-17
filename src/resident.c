@@ -10,7 +10,7 @@ const int NUMBER_OF_NAME_SURNAME = 40;
 const int MAX_NAME_SURNAME = 20;
 
 char*** load_list_of_names_from_file() {
-    // Stwórz tabelę do przechowania możliwych imion oraz nazwisk
+    // Create an array to store possible first names and last names
     char ***list_of_possible_names = malloc(NUMBER_OF_CATEGORY * sizeof(char**));
     for (int i = 0; i < 4; i++) {
         list_of_possible_names[i] = malloc(NUMBER_OF_NAME_SURNAME * sizeof(char*));
@@ -19,34 +19,34 @@ char*** load_list_of_names_from_file() {
         }
     }
     
-    char buffer[10000]; // Bufor do odczytu linii z pliku
+    char buffer[10000];  // Buffer for reading a line from a file
     int line = 0;
 
     FILE *file = fopen("imiona.txt", "r");
 
     if (file == NULL) {
-        printf("Błąd: Nie udało otworzyć się pliku imiona.txt\n");
+        printf("Error: Could not open the file imiona.txt\n");
         exit(EXIT_FAILURE);
     } else {
-        // Odczytaj plik linia po linii
+        // Read the file line by line
         while (!feof(file) && !ferror(file)) {
             if (fgets(buffer, 10000, file) != NULL) {
                 int letter_line = 0;
                 int letter_name = 0;
                 int name = 0;
-                // Przejdź po wszystkich literach w danej linii
+                // Iterate through all the characters in the given line
                 while (buffer[letter_line] != '\0') {
                     if (buffer[letter_line] != ' ' && buffer[letter_line] != '\n') {
                         list_of_possible_names[line][name][letter_name] = buffer[letter_line];
                         letter_name++;
                     } else {
-                        list_of_possible_names[line][name][letter_name] = '\0';  // Zakończy imię/nazwisko
-                        name ++;  // Przejdź do kolejnego imienia/nazwiska
+                        list_of_possible_names[line][name][letter_name] = '\0';  // End of first name/last name
+                        name ++;  // Move to the next first name/last name
                         letter_name = 0;
                     }
                     letter_line++;
                 }
-                line++;  // Przejdź do następnej linii
+                line++;  // Move to the next line
             }
         }
     }
@@ -58,19 +58,19 @@ char*** load_list_of_names_from_file() {
 struct Resident* create_resident(bool newborn, char*** list_of_possible_names) {
     struct Resident* resident = malloc(sizeof(struct Resident));
     if (resident == NULL) {
-        printf("Błąd: Nie udało się przydzielić pamięci dla struktury mieszkaniecw stwórz_mieszkańca.\n");
+        printf("Error: Failed to allocate memory for the resident structure in create_resident.\n");
         exit(EXIT_FAILURE);
     }
 
-    // Losuj płeć mieszkańca
+    // Randomly assign the gender of the resident
     resident->gender = rand() % 2 ? Man : Woman;
 
-    // Przydziel imię i nazwisko w zależności od płci
+    // Assign first name and last name based on gender
     if (resident->gender == Man) {
         char* name = list_of_possible_names[0][rand() % 40];
         resident->name = malloc(sizeof(char) * MAX_NAME_SURNAME);
         if (resident->name == NULL) {
-            printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
+            printf("Error: Failed to allocate memory for the resident->name structure in create_resident.\n");
             exit(EXIT_FAILURE);
         }
         strcpy(resident->name, name);
@@ -78,7 +78,7 @@ struct Resident* create_resident(bool newborn, char*** list_of_possible_names) {
         char* surname = list_of_possible_names[2][rand() % 40];
         resident->surname = malloc(sizeof(char) * MAX_NAME_SURNAME);
         if (resident->surname == NULL) {
-            printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->nazwisko w stwórz_mieszkańca.\n");
+            printf("Error: Failed to allocate memory for the resident->surname structure in create_resident.\n");
             exit(EXIT_FAILURE);
         }
         strcpy(resident->surname, surname);
@@ -86,7 +86,7 @@ struct Resident* create_resident(bool newborn, char*** list_of_possible_names) {
         char* name = list_of_possible_names[1][rand() % 40];
         resident->name = malloc(sizeof(char) * MAX_NAME_SURNAME);
         if (resident->name == NULL) {
-            printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
+            printf("Error: Failed to allocate memory for the resident->name structure in create_resident.\n");
             exit(EXIT_FAILURE);
         }
         strcpy(resident->name, name);
@@ -94,20 +94,20 @@ struct Resident* create_resident(bool newborn, char*** list_of_possible_names) {
         char* surname = list_of_possible_names[3][rand() % 40];
         resident->surname = malloc(sizeof(char) * MAX_NAME_SURNAME);
         if (resident->surname == NULL) {
-            printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->nazwisko w stwórz_mieszkańca.\n");
+            printf("Error: Failed to allocate memory for the resident->surname structure in create_resident.\n");
             exit(EXIT_FAILURE);
         }
         strcpy(resident->surname, surname);
     }
 
-    // Ustaw wiek i pensję mieszkańca w zależności od tego, czy jest noworodkiem
+    // Set the age and salary of the resident based on whether they are a newborn
     if (newborn) {
         resident->age = 0;
         resident->salary = 0;
     } else {
         resident->age = rand() % 70;
         resident->salary = 0;
-        // W przypadku w którym mieszkaniec ma co najmniej 18 lat, losuj czy posiada pracę
+        // If the resident is at least 18 years old, randomly assign whether they have a job
         if (resident->age >= 18) {
             int i = resident->age - 18;
             while (i >= 0 && resident->salary == 0) {
@@ -119,7 +119,7 @@ struct Resident* create_resident(bool newborn, char*** list_of_possible_names) {
     return resident;
 }
 
-// Spróbuj przydzielić pracę mieszkańcowi, oraz ustawial losową pensję
+// Try to assign a job to the resident and set a random salary
 void job(struct Resident* resident) {
     if (rand() % 5 == 0) resident->salary = 5000 + (rand() % 10000);
 }

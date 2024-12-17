@@ -7,12 +7,12 @@
 #include "buildings.h"
 
 void death_of_residents(struct Town *town, struct Graveyard *graveyard, bool fire, bool flood, bool earthquake) {
-    if (town->residents == NULL) return; // Powróć gdy brak jest mieszkańców
+    if (town->residents == NULL) return; // Return if there are no residents 
 
     int row = 0;
     int position = 0;
 
-    // Sprawdź mieszkańców na początku listy
+    // Check the residents at the beginning of the list
     bool death_of_first_resident = true;
     while (town->residents != NULL && death_of_first_resident) {
         int chance_of_death = chance_of_natural_death(town->residents->val->age);
@@ -29,14 +29,14 @@ void death_of_residents(struct Town *town, struct Graveyard *graveyard, bool fir
         if (chance_of_death > rand() % 1000) {
             add_deceased(graveyard, town->residents->val, town->year, &row, &position);
             struct Residents *temp = town->residents;
-            town->residents = town->residents->next; // Usuń aktualnego mieszkańca z listy
-            free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
-            town->number_of_residents -= 1; // Zmniejsz liczbę mieszkańców
+            town->residents = town->residents->next; // Remove the current resident from the list  
+            free(temp); // Free the current resident memory
+            town->number_of_residents -= 1; // Decrease the number of residents
             death_of_first_resident = true;
         }
     }
 
-    // Sprawdź mieszkańców w pozostałej części listy
+    // Check the residents in the remaining part of the list 
     struct Residents *current_resident = town->residents;
     while (current_resident != NULL && current_resident->next != NULL) {
         int chance_of_death = chance_of_natural_death(town->residents->val->age);
@@ -50,48 +50,48 @@ void death_of_residents(struct Town *town, struct Graveyard *graveyard, bool fir
             chance_of_death += chance_of_death_from_earthquake(town);
         }
         if (chance_of_death > rand() % 1000) {
-            add_deceased(graveyard, current_resident->next->val, town->year, &row, &position); // Dodaje zmarłego na cmentarz
+            add_deceased(graveyard, current_resident->next->val, town->year, &row, &position); // Add the deceased to the cemetery
             struct Residents *temp = current_resident->next;
-            current_resident->next = current_resident->next->next; // Usuń aktualnego mieszkańca z listy
-            free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
-            town->number_of_residents -= 1; // Zmniejsza liczbę mieszkańców
+            current_resident->next = current_resident->next->next; // Remove the current resident from the list
+            free(temp); // Free the current resident memory
+            town->number_of_residents -= 1; // Decrease the number of residents
         } else {
-            current_resident = current_resident->next; // Przejdź do kolejnego mieszkańca
+            current_resident = current_resident->next; // Move to the next resident
         }
     }
 }
 
 int chance_of_natural_death(int age) {
-    int range = age / 20; // Podziel wiek na przedziały co 20 lat
+    int range = age / 20; // Divide age into 20-year intervals
     switch (range) {
-        case 0:  // Wiek 0-19
+        case 0:  // Age 0-19
             return 1;
-        case 1:  // Wiek 20-39
+        case 1:  // Age 20-39
             return 2;
-        case 2:  // Wiek 40-59
+        case 2:  // Age 40-59
             return 4;
-        case 3:  // Wiek 60-79
+        case 3:  // Age 60-79
             return 50;
-        case 4:  // Wiek 80-99
+        case 4:  // Age 80-99
             return 300;
-        case 5:  // Wiek 100-119
+        case 5:  // Age 100-119
             return 800;
-        default: // Wiek 120 i wyżej
+        default: // Age 120 and more
             return 950;
     }
 }
 
-// Określ dodatkowe ryzyko śmierci w wyniku pożaru - wartość zależy od stosunku ilości mieszkańców do straży pożarnej
+// Determine the additional risk of death due to fire - the value depends on the ratio of residents to fire stations
 int chance_of_death_from_fire(struct Town *town) {
     return 150 * fire_department(town->number_of_residents / town->fire_departments);
 }
 
-// Określ dodatkowe ryzyko śmierci w wyniku powodzi - wartość zależy od stosunku ilości mieszkańców do straży pożarnej
+// Determine the additional risk of death due to flood - the value depends on the ratio of residents to fire stations
 int chance_of_death_from_flooding(struct Town *town) {
     return 100 * fire_department(town->number_of_residents / town->fire_departments);
 }
 
-// Określ dodatkowe ryzyko śmierci w wyniku trzęsienia ziemi - wartość zależy od stosunku ilości mieszkańców do straży pożarnej
+// Determine the additional risk of death due to earthquake - the value depends on the ratio of residents to fire stations
 int chance_of_death_from_earthquake(struct Town *town) {
     return 50 * fire_department(town->number_of_residents / town->fire_departments);
 }
