@@ -21,9 +21,9 @@
 #endif
 
 void simulation(struct Town *town) {
-    int next_planned_building = rand() % 3;  // Losowy wybór budynku, który będzie budowany
+    int next_planned_building = rand() % 3;  // Randomly select a building to be constructed
 
-    // Wyczyść ekran
+    // Clear the screen
     #ifdef _WIN32
         system("cls");  // Windows
     #else
@@ -33,78 +33,78 @@ void simulation(struct Town *town) {
     int number_of_years;
     int simulation_speed;
 
-    // Pobierz ilość lat do zasymulowania od użytkownika
-    printf("Podaj ilość lat do zasymulowania: ");
+    // Get the number of years to simulate from the user
+    printf("Enter the number of years to simulate: ");
     int input_number_of_years = 0;
     while (input_number_of_years != 1) {
-        input_number_of_years = scanf("%i", &number_of_years);  // Odczytaj ilość lat do zasymulowania
+        input_number_of_years = scanf("%i", &number_of_years);  // Read the number of years to simulate
         if (input_number_of_years != 1) {
-            printf("Podaj ilość lat do zasymulowania (w formacie liczbowym): ");
+            printf("Enter the number of years to simulate (in numeric format): ");
             int c;
-            // Oczyść bufor wejściowy, aby uniknąć zapętlenia
+            // Clear the input buffer to avoid looping
             while ((c = getchar()) != '\n' && c != EOF);
         }
     }
 
-    // Pobierz szybkość symulacji od użytkownika
-    printf("Podaj szybkość symulacji (w ms): ");
+    // Get the simulation speed from the user
+    printf("Enter the simulation speed (in ms): ");
     int input_simulation_speed = 0;
     while (input_simulation_speed != 1) {
-        input_simulation_speed = scanf("%i", &simulation_speed);  // Odczytaj szybkość symulacji
+        input_simulation_speed = scanf("%i", &simulation_speed);  // Read the simulation speed
         if (input_simulation_speed != 1) {
-            printf("Podaj szybkość symulacji (w formacie liczbowym): ");
+            printf("Enter the simulation speed (in numerical format): ");
             int c;
-            // Oczyść bufor wejściowy, aby uniknąć zapętlenia
+            // Clear the input buffer to avoid looping
             while ((c = getchar()) != '\n' && c != EOF);
         }
     }
 
-    // Główna pętla symulacji
+    // Main simulation loop
     for (int i = 0; i < number_of_years; i++) {
-        // Wyczyść ekran
+        // Clear the screen
         #ifdef _WIN32
             system("cls");  // Windows
         #else
             system("clear");  // Linux/macOS
         #endif
         
-        printf("----------------------------Rok:%i-----------------------------------\n",town->year);
+        printf("----------------------------Year:%i----------------------------------\n",town->year);
         printf("Budżet: %lli\n", town->budget);
 
-        manage_residents(town);  // Zwiększ wiek, przydziel pracę, wyślij na emeryturę oraz zbierz podatki od wszystkich mieszkańców
-        maintain_buildings(town);  // Opłać utrzymanie istniejących budynków
-        next_planned_building = build_a_building(town, next_planned_building); // Buduj nowe budynków - o ile są fundusze
+        manage_residents(town);  // Increase age, assign jobs, send to retirement, and collect taxes from all residents
+        maintain_buildings(town);  // Pay maintenance for existing buildings
+        next_planned_building = build_a_building(town, next_planned_building); // Build new buildings - if there are sufficient funds
 
-        // Losowe wystąpienie katastrof
+        // Random occurrence of disasters
         bool fire = (rand() % 25 == 0);
         bool flood = (rand() % 25 == 0);
         bool earthquake = (rand() % 25 == 0);
 
-        // Sprawdź, czy któryś z mieszkańców umarł, jeżeli tak, usuń go z listy mieszkańców i dodaj na cmentarz
+        // Check if any resident has died; if so, remove them from the list of residents and add them to the graveyard
         death_of_residents(town, town->graveyard, fire, flood, earthquake);
 
-        // Dodaj nowych mieszkańców do miasteczka, liczba zależy od aktualnej populacji i liczby szpitali
+        // Add new residents to the town, the number depends on the current population and the number of hospitals
         for (int i = 0; i < (int)(((town->number_of_residents) / 50) * hospital(town->number_of_residents / town->hospitals)) + 1; i++) {
             add_resident(town, true);
         }
 
-        // Wyświetl informację o mieszkańcach
-        printf("----------------------------Mieszkańcy---------------------------------\n");
-        printf("Ilość mieszkańców: %i\n", town->number_of_residents);
+        // Display information about the residents
+        printf("----------------------------Residents---------------------------------\n");
+        printf("Number of residents: %i\n", town->number_of_residents);
 
-        // Wyświetl informację o cmentarzu
-        printf("----------------------------Cmentarz-----------------------------------\n");
-        printf("Ilość rzędów: %i, ilość pozycji: %i\n", town->graveyard->number_of_rows, town->graveyard->number_of_positions);
+        // Display information about the cemetery
+        printf("----------------------------Graveyard---------------------------------\n");
+        printf("Number of rows: %i, number of positions: %i\n", town->graveyard->number_of_rows, town->graveyard->number_of_positions);
 
-        // Wyświetl informację o budynkach
-        printf("----------------------------Budynki------------------------------------\n");
-        printf("Ilość szpitali: %i\n", town->hospitals);
-        printf("Ilość budynków straży pożarnej: %i\n", town->fire_departments);
-        printf("Ilość budynków szkolnych: %i\n", town->schools);
+        // Display information about the buildings
+        printf("----------------------------Buildings---------------------------------\n");
+        printf("Number of hospitals: %i\n", town->hospitals);
+        printf("Number of fire departments: %i\n", town->fire_departments);
+        printf("Number of school buildings: %i\n", town->schools);
 
-        // Wyświetl informację o katastrofach
-        printf("----------------------------Katastrofy---------------------------------\n");
-        if (!fire && !flood && !earthquake) printf("Brak\n");
+        // Display information about the disasters
+        printf("----------------------------Disasters---------------------------------\n");
+        if (!fire && !flood && !earthquake) printf("None\n");
         if (fire) printf(
             "                    (                                                \n"
             "                    )\\ )                                             \n"
@@ -136,15 +136,8 @@ void simulation(struct Town *town) {
             "  |_||_|  /___\\___||___/_|\\___|_| |_|_|\\___| /___|_|\\___|_| |_| |_|_|\n"
             );
 
-        // printf("NACIŚNIJ PRZYCISK ABY ZATRZYMAĆ SYMULACJĘ");
-        // if (kbhit()) {  // Nasłuchuj wciśnięcia przycisku
-        //     getchar();   // Wczytaj wciśnięty klawisz aby nie wyświetlić go w terminalu
-        //     system("cls");
-        //     return;
-        // }
-
         #ifdef _WIN32
-            Sleep(szybkość_symulacji);
+            Sleep(simulation_speed);
         #else
             sleep(simulation_speed / 1000);
         #endif
