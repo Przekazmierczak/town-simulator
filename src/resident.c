@@ -22,10 +22,10 @@ char*** load_list_of_names_from_file() {
     char buffer[10000];  // Buffer for reading a line from a file
     int line = 0;
 
-    FILE *file = fopen("imiona.txt", "r");
+    FILE *file = fopen("names.txt", "r");
 
     if (file == NULL) {
-        printf("Error: Could not open the file imiona.txt\n");
+        printf("Error: Could not open the file names.txt\n");
         exit(EXIT_FAILURE);
     } else {
         // Read the file line by line

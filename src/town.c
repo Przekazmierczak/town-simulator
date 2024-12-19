@@ -9,24 +9,24 @@
 struct Town* create_town(int number_of_residents, int budget) {
     struct Town *town = malloc(sizeof(struct Town));
     if (town == NULL) {
-        printf("Błąd: Nie udało się przydzielić pamięci dla miasteczka w stwórz_miasteczko.\n");
+        printf("Error: Failed to allocate memory for the town in create_town.\n");
         exit(EXIT_FAILURE);
     }
-    town->residents = NULL;  // Inicjalizacja listy mieszkańców
-    town->number_of_residents = 0; // Początkowa liczba mieszkańców
-    town->year = 0; // Rok początkowy
-    town->budget = budget; // Budżet początkowy
+    town->residents = NULL;  // Initialize the list of residents
+    town->number_of_residents = 0; // Initial number of residents
+    town->year = 0; // Initial year
+    town->budget = budget; // Initial budget
 
     int number_of_positions = 10;
     town->graveyard = build_graveyard(number_of_positions);
 
-    town->hospitals = 1;  // Początkowa liczba szpitali
-    town->fire_departments = 1;  // Początkowa liczba straży pożarnej
-    town->schools = 1;  // Początkowa liczba szkół
+    town->hospitals = 1;  // Initial number of hospitals
+    town->fire_departments = 1;  // Initial number of fire departments
+    town->schools = 1;  // Initial number of schools
 
     town->possible_names = load_list_of_names_from_file();
 
-    // Dodaj początkowych mieszkańców do miasteczka
+    // Add initial residents to the town
     for (int i = 0; i < number_of_residents; i++) {
         add_resident(town, false);
     }
@@ -38,54 +38,54 @@ void add_resident(struct Town *town, bool newborn) {
     struct Resident *resident = create_resident(newborn, town->possible_names);
     struct Residents *current_resident = malloc(sizeof(struct Residents));
     if (current_resident == NULL) {
-        printf("Błąd: Nie udało się przydzielić pamięci dla węzła w dodaj_mieszkańca.\n");
+        printf("Error: Failed to allocate memory for the node in add_resident.\n");
         exit(EXIT_FAILURE);
     }
-    current_resident->val = resident;  // Przypisz nowego mieszkańca
-    current_resident->next = town->residents; // Dodaj nowego mieszkańca na początek listy
+    current_resident->val = resident;  // Assign a new resident
+    current_resident->next = town->residents; // Add a new resident to the beginning of the list
     town->residents = current_resident;
-    town->number_of_residents += 1; // Zwiększ liczbę mieszkańców
+    town->number_of_residents += 1; // Increase the number of residents
 }
 
-// Zwiększ wiek, przydziel pracę, wyślij na emeryturę oraz zbierz podatki od wszystkich mieszkańców
+// Increase age, assign jobs, send to retirement, and collect taxes from all resident
 void manage_residents(struct Town *town) {
-    town->year += 1; // Zwiększ aktualny rok
+    town->year += 1; // Increment the current year
     struct Residents *current_resident = town->residents;
 
     while (current_resident != NULL) {
-        current_resident->val->age += 1; // Zwiększ wiek aktualnego mieszkańca
+        current_resident->val->age += 1; // Increase the age of the current resident
 
-        // Przyznaj pracę, jeśli aktualny mieszkaniec ma 18 lat lub więcej i nie pracuje
+        // Assign a job if the current resident is 18 years old or older and is unemployed
         if (current_resident->val->age >= 18 && current_resident->val->salary == 0) {
             job(current_resident->val);
         }
 
-        // Zakończ pracę gdy, aktualny mieszkaniec osiągnął wiek emerytalny
+        // Terminate employment when the current resident has reached the retirement age
         if (current_resident->val->age >= 65 && current_resident->val->salary != 0) {
             current_resident->val->salary = 0;
         }
-        // Zbierz podatki - wysokość podatków zwiększona jest dodatkowo od wartość stosunku ilości mieszkańców do ilości szkół
+        // Collect taxes - the tax amount is additionally increased based on the ratio of the number of residents to the number of schools
         town->budget += (int)(current_resident->val->salary * 0.3 * school(town->number_of_residents / town->schools));
         current_resident = current_resident->next;
     }
 }
 
 void town_informations(struct Town *town) {
-    // Wyczyść ekran
+    // Clear the screen
     #ifdef _WIN32
         system("cls");  // Windows
     #else
         system("clear");  // Linux/macOS
     #endif
-    printf("Rok: %i\n", town->year);
-    printf("Budżet: %lli\n", town->budget);
-    printf("Ilość mieszkańców: %i\n", town->number_of_residents);
-    printf("Wielkość cmentarza: %i rzędów\n", town->graveyard->number_of_rows);
-    printf("Ilość szpitali: %i\n", town->hospitals);
-    printf("Ilość budynków straży pożarnej: %i\n", town->fire_departments);
-    printf("Ilość budynków szkolnych: %i\n", town->schools);
-    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
-    while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
+    printf("Year: %i\n", town->year);
+    printf("Budget: %lli\n", town->budget);
+    printf("Number of residents: %i\n", town->number_of_residents);
+    printf("Graveyard size: %i rows\n", town->graveyard->number_of_rows);
+    printf("Number of hospitals: %i\n", town->hospitals);
+    printf("Number of fire department buildings: %i\n", town->fire_departments);
+    printf("Number of school buildings: %i\n", town->schools);
+    printf("PRESS ENTER TO RETURN TO THE MENU");
+    while (getchar() != '\n');  // Wait for a key press to return to the menu
 }
 
 void residents_informations(struct Town *town) {
@@ -99,20 +99,20 @@ void residents_informations(struct Town *town) {
     struct Residents *current_resident = town->residents;
     int count = 1;
     while (current_resident != NULL) {
-        // Wydrukuj dane aktualnego mieszkańca
-        printf("%i: %s %s Płeć: %s Wiek: %i Pensja: %i\n",
+        // Print the current resident's data
+        printf("%i: %s %s Gender: %s Age: %i Salary: %i\n",
             count,
             current_resident->val->name,
             current_resident->val->surname,
-            current_resident->val->gender == Man ? "Mężczyna" : "Kobieta",
+            current_resident->val->gender == Man ? "Man" : "Woman",
             current_resident->val->age,
             current_resident->val->salary
             );
-        current_resident = current_resident->next; // Przejdź do kolejnego mieszkańca
+        current_resident = current_resident->next; // Move to the next resident
         count++;
     }
-    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
-    while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
+    printf("PRESS ENTER TO RETURN TO THE MENU");
+    while (getchar() != '\n');  // Wait for a key press to return to the menu
 }
 
 void free_residents(struct Town *town) {

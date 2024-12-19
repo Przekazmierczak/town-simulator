@@ -112,10 +112,10 @@ void list_of_deceased(struct Graveyard *graveyard) {
     
     for (int i = 0; i < graveyard->number_of_rows; i++) {
         for (int j = 0; j < graveyard->number_of_positions; j++) {
-            printf("In row number %i, in spot number %i rests: ", i, j);
+            printf("In row number %i, in spot number %i, rests: ", i, j);
             if (graveyard->alley[i][j] != NULL) {
                 // Display the deceased's data if the grave is occupied
-                printf("%s %s ", graveyard->alley[i][j]->deceased->name, graveyard->alley[i][j]->deceased->surname);
+                printf("%s %s, ", graveyard->alley[i][j]->deceased->name, graveyard->alley[i][j]->deceased->surname);
                 printf("Year of liquidation: %i\n", graveyard->alley[i][j]->year_of_liquidation);
             } else {
                 // Display information that the space is empty
