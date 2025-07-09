@@ -11,6 +11,8 @@ Program symuluje rozrost miasteczka, pozwalając użytkownikowi zarządzać jego
 6.	Wczytaj – wczytuje dane miasteczka z wcześniej zapisanego pliku binarnego.
 7.	Zakończ program – kończy działanie programu.
 
+![Town](https://github.com/user-attachments/assets/363fa9a2-a9a0-4501-a204-8f991fbcc75d)
+
 ## Wymagania
 
 Aby uruchomić projekt, potrzebujesz:
